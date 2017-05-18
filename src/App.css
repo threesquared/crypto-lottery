@@ -1,0 +1,18 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #222;
+  padding: 20px;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+.Number {
+	margin-bottom: 10px;
+}
