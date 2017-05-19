@@ -3,7 +3,6 @@ import bigi from 'bigi';
 import bitcoin from 'bitcoinjs-lib';
 import blockr from 'blockr-unofficial';
 import randomBytes from 'randombytes';
-import typeforce from 'typeforce';
 import './App.css';
 
 class App extends Component {
@@ -27,6 +26,9 @@ class App extends Component {
    * @return {void}
    */
   hitMe() {
+    this.setState(prevState => ({ keyPair: false }));
+    this.refs.button.setAttribute('disabled', 'disabled');
+
     const number = this.randomNumber();
     const keyPair = new bitcoin.ECPair(number)
 
@@ -36,6 +38,8 @@ class App extends Component {
         keyPair: keyPair,
         winnings: resp[0].confirmedBalance,
       }));
+
+      this.refs.button.removeAttribute('disabled');
     });
   }
 
@@ -45,10 +49,7 @@ class App extends Component {
    * @return {BigInt}
    */
   randomNumber() {
-    var buffer = randomBytes(32)
-    typeforce(typeforce.BufferN(32), buffer)
-
-    return bigi.fromBuffer(buffer);
+    return bigi.fromBuffer(randomBytes(32));
   }
 
   /**
@@ -83,7 +84,7 @@ class App extends Component {
           <h1>BTC Lottery</h1>
         </div>
         { message }
-        <button onClick={ this.hitMe }>
+        <button ref="button" onClick={ this.hitMe }>
           I'm feeling lucky
         </button>
       </div>
