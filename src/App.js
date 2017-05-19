@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import bigi from 'bigi';
 import bitcoin from 'bitcoinjs-lib';
-import blocktrail from 'blocktrail-sdk';
 import randomBytes from 'randombytes';
 import './App.css';
 
@@ -32,7 +31,7 @@ class App extends Component {
     const number = this.randomNumber();
     const keyPair = new bitcoin.ECPair(number)
 
-    this.getAddress(keyPair.getAddress()).then((address) => {
+    this.getAddress(keyPair.getAddress()).then(response => response.json()).then((address) => {
       this.setState(prevState => ({
         number: number,
         keyPair: keyPair,
@@ -50,14 +49,7 @@ class App extends Component {
    * @return {Object}
    */
   getAddress(address) {
-    const params = {
-      apiKey: "16d2fb459cc6c20d8ede96ae116e0e90454b9957",
-      network: "BTC",
-      testnet: false
-    };
-    const client = blocktrail.BlocktrailSDK(params);
-
-    return client.address(address);
+    return fetch(`https://api.blocktrail.com/v1/btc/address/${address}?api_key=16d2fb459cc6c20d8ede96ae116e0e90454b9957`)
   }
 
   /**
