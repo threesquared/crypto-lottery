@@ -5,10 +5,10 @@
   "dependencies": {
     "bigi": "^1.4.2",
     "bitcoinjs-lib": "^3.0.3",
-    "blockr-unofficial": "^1.2.5",
+    "blocktrail-sdk": "^3.0.10",
     "randombytes": "^2.0.3",
     "react": "^15.5.4",
-    "react-dom": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "gh-pages": "^1.0.0",

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import bigi from 'bigi';
 import bitcoin from 'bitcoinjs-lib';
-import blockr from 'blockr-unofficial';
+import blocktrail from 'blocktrail-sdk';
 import randomBytes from 'randombytes';
 import './App.css';
 
@@ -32,15 +32,32 @@ class App extends Component {
     const number = this.randomNumber();
     const keyPair = new bitcoin.ECPair(number)
 
-    blockr().Addresses.Summary([keyPair.getAddress()], (err, resp) => {
+    this.getAddress(keyPair.getAddress()).then((address) => {
       this.setState(prevState => ({
         number: number,
         keyPair: keyPair,
-        winnings: resp[0].confirmedBalance,
+        winnings: address.balance,
       }));
 
       this.refs.button.removeAttribute('disabled');
-    });
+    })
+  }
+
+  /**
+   * Get details about a BTC address
+   *
+   * @param  {string} address
+   * @return {Object}
+   */
+  getAddress(address) {
+    const params = {
+      apiKey: "16d2fb459cc6c20d8ede96ae116e0e90454b9957",
+      network: "BTC",
+      testnet: false
+    };
+    const client = blocktrail.BlocktrailSDK(params);
+
+    return client.address(address);
   }
 
   /**
