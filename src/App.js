@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import bigi from 'bigi';
 import bitcoin from 'bitcoinjs-lib';
+import blockr from 'blockr-unofficial';
 import randomBytes from 'randombytes';
 import typeforce from 'typeforce';
 import './App.css';
@@ -21,7 +22,7 @@ class App extends Component {
   }
 
   /**
-   * Generate a BTC address
+   * Generate a BTC address and check its balance
    *
    * @return {void}
    */
@@ -29,14 +30,17 @@ class App extends Component {
     const number = this.randomNumber();
     const keyPair = new bitcoin.ECPair(number)
 
-    this.setState(prevState => ({
-      number: number,
-      keyPair: keyPair
-    }));
+    blockr().Addresses.Summary([keyPair.getAddress()], (err, resp) => {
+      this.setState(prevState => ({
+        number: number,
+        keyPair: keyPair,
+        winnings: resp[0].confirmedBalance,
+      }));
+    });
   }
 
   /**
-   * Generate a random 32 bit integer
+   * Generate a random 256 bit integer
    *
    * @return {BigInt}
    */
@@ -55,7 +59,8 @@ class App extends Component {
   renderMessage() {
     return (
       <div className="Number">
-        Your lucky number is <a href={`https://blockchain.info/address/${this.state.keyPair.getAddress()}`}>{this.state.number.toString()}</a>!
+        Your lucky number is <a href={`https://blockchain.info/address/${this.state.keyPair.getAddress()}`}>{this.state.number.toString()}</a>!<br />
+        You have won {this.state.winnings} BTC!!
       </div>
     )
   }
@@ -66,7 +71,6 @@ class App extends Component {
    * @return {XML}
    */
   render() {
-
     let message = '';
 
     if(this.state.keyPair) {
